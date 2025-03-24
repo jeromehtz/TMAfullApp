@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateFin = document.getElementById('dateFin').value;
             const raison = document.getElementById('raison').value;
 
+            console.log(raison);
             const demande = {
                 nom,
                 prenom,
@@ -84,6 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return 'text-yellow-600';
         }
+    }
+
+    function fRaison(demandes)
+    {
+
     }
 
     window.changerStatut = function(index, statut) {
