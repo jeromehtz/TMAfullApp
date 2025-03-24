@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateFin = document.getElementById('dateFin').value;
             const raison = document.getElementById('raison').value;
 
+            
+
+            console.log(raison);
             const demande = {
                 nom,
                 prenom,
@@ -22,6 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 statut: 'en attente'
             };
 
+            const erreurDate = testDate()
+            if (erreurDate != "")
+            {
+                alert(erreurDate);
+                return;
+            }
+
             let demandes = JSON.parse(localStorage.getItem('demandes')) || [];
             demandes.push(demande);
             localStorage.setItem('demandes', JSON.stringify(demandes));
@@ -29,6 +39,20 @@ document.addEventListener('DOMContentLoaded', () => {
             afficherHistorique(demandes);
             form.reset();
         });
+    }
+
+    function testDate () {
+        messageErreur = ""
+        if (dateDebut < Date.now)
+        {
+            messageErreur +="Date de début : Vous ne pouvez pas sélectionner de date antérieure, veuillez sélectionner une autre date. \n"
+        }
+        if (dateFin < Date.now)
+        {
+            messageErreur +="Date de fin : Vous ne pouvez pas sélectionner de date antérieure, veuillez sélectionner une autre date."
+        }
+
+        return messageErreur;
     }
 
     function afficherHistorique(demandes) {
@@ -84,6 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return 'text-yellow-600';
         }
+    }
+
+    function fRaison(demandes)
+    {
+
     }
 
     window.changerStatut = function(index, statut) {
