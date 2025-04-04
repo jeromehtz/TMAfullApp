@@ -8,20 +8,37 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const nom = document.getElementById('nom').value;
+            const prenom = document.getElementById('prenom').value;
+            const prenom_ = document.getElementById('prenom_').value;
             const dateDebut = document.getElementById('dateDebut').value;
             const dateFin = document.getElementById('dateFin').value;
-            const raison = document.getElementById('raison').value;
-            const dateDemande = new Date();
+            let raison = document.getElementById('raison').value;
+            let raison_ = document.getElementById('raison_');
             
+            const dateDemande = new Date();
+            console.log(raison);
+            
+            if (raison === "Autre")
+            {
+                if (raison_ === null) {
+                    alert('Veuillez saisir la raison de votre demande.');
+                    return;
+                }
+                raison = document.getElementById('raison_').value;
+                
+                
+            }
             
             const demande = {
                 nom,
+                prenom,
+                prenom_,
                 dateDebut,
                 dateFin,
                 raison,
                 statut: 'en attente'
             };
-            if (!nom || !dateDebut || !dateFin || !raison) {
+            if (!nom || !prenom || !dateDebut || !dateFin || !raison) {
                 alert('Veuillez remplir tous les champs correctement.');
                 return;
             }
@@ -69,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.classList.add('p-4', 'border', 'rounded-lg', 'shadow-sm');
                 li.innerHTML = `
                     <strong>Nom:</strong> ${demande.nom}<br>
-                    <strong>Date de début:</strong> ${demande.dateDebut}<br>
+                    <strong>Prénom:</strong> ${demande.prenom}<br>
+                    <strong>Deuxième prénom:</strong> ${demande.prenom_}<br>
+                    <strongDate de début:</strong> ${demande.dateDebut}<br>
                     <strong>Date de fin:</strong> ${demande.dateFin}<br>
                     <strong>Raison:</strong> ${demande.raison}<br>
                     <strong>Statut:</strong> <span class="font-semibold ${getStatutClass(demande.statut)}">${demande.statut}</span>
