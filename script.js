@@ -8,51 +8,57 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const nom = document.getElementById('nom').value;
-            const prenom = document.getElementById('prenom').value;
             const dateDebut = document.getElementById('dateDebut').value;
             const dateFin = document.getElementById('dateFin').value;
             const raison = document.getElementById('raison').value;
-
+            const dateDemande = new Date();
             
-
-            console.log(raison);
+            
             const demande = {
                 nom,
-                prenom,
                 dateDebut,
                 dateFin,
                 raison,
                 statut: 'en attente'
             };
-
-            const erreurDate = testDate()
-            if (erreurDate != "")
-            {
-                alert(erreurDate);
+            if (!nom || !dateDebut || !dateFin || !raison) {
+                alert('Veuillez remplir tous les champs correctement.');
                 return;
             }
+            else if (new Date(dateDebut) < dateDemande) {
+                alert('La date de début ne peut pas être dans le passé.');
+                document.getElementById('dateDebut').value="";
+                return;
+            }
+            else if (new Date(dateFin) < dateDemande) {
+                document.getElementById('dateFin').value="";
+                alert('La date de fin ne peut pas être dans le passé.');
+                
+                return;
+            }
+            else if (new Date(dateDebut) > new Date(dateFin)) {
+                document.getElementById('dateFin').value="";
+                document.getElementById('dateDebut').value="";
 
-            let demandes = JSON.parse(localStorage.getItem('demandes')) || [];
-            demandes.push(demande);
-            localStorage.setItem('demandes', JSON.stringify(demandes));
+                alert('La date de début ne peut pas être après la date de fin.');
+                return;
+            }
+            else if (new Date(dateDebut).getTime() === new Date(dateFin).getTime()) {
+                document.getElementById('dateFin').value="";
+                document.getElementById('dateDebut').value="";
 
-            afficherHistorique(demandes);
+                alert('La date de début et la date de fin ne peuvent pas être identiques.');
+                return;
+            }
+            else{
+                let demandes = JSON.parse(localStorage.getItem('demandes')) || [];
+                demandes.push(demande);
+                localStorage.setItem('demandes', JSON.stringify(demandes));
+                afficherHistorique(demandes);
+
+            }
             form.reset();
         });
-    }
-
-    function testDate () {
-        messageErreur = ""
-        if (dateDebut < Date.now)
-        {
-            messageErreur +="Date de début : Vous ne pouvez pas sélectionner de date antérieure, veuillez sélectionner une autre date. \n"
-        }
-        if (dateFin < Date.now)
-        {
-            messageErreur +="Date de fin : Vous ne pouvez pas sélectionner de date antérieure, veuillez sélectionner une autre date."
-        }
-
-        return messageErreur;
     }
 
     function afficherHistorique(demandes) {
@@ -63,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.classList.add('p-4', 'border', 'rounded-lg', 'shadow-sm');
                 li.innerHTML = `
                     <strong>Nom:</strong> ${demande.nom}<br>
-                    <strong>Prenom:</strong> ${demande.prenom}<br>
                     <strong>Date de début:</strong> ${demande.dateDebut}<br>
                     <strong>Date de fin:</strong> ${demande.dateFin}<br>
                     <strong>Raison:</strong> ${demande.raison}<br>
@@ -83,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.innerHTML = `
                     <div class="mb-4">
                         <strong>Nom:</strong> ${demande.nom}<br>
-                        <strong>Prenom:</strong> ${demande.prenom}<br>
                         <strong>Date de début:</strong> ${demande.dateDebut}<br>
                         <strong>Date de fin:</strong> ${demande.dateFin}<br>
                         <strong>Raison:</strong> ${demande.raison}<br>
@@ -108,11 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
             default:
                 return 'text-yellow-600';
         }
-    }
-
-    function fRaison(demandes)
-    {
-
     }
 
     window.changerStatut = function(index, statut) {
