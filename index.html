@@ -8,55 +8,52 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-6">
-    <div class="max-w-4xl w-full bg-white rounded-lg shadow-md flex">
-        <!-- Formulaire à gauche -->
-        <div class="w-1/2 p-6 border-r">
-            <h1 class="text-2xl font-bold mb-4">Déposer une Demande de Congé</h1>
-            <form id="congeForm" class="space-y-4">
-                <div>
-                    <label for="nom" class="block text-gray-700">Nom:</label>
-                    <input type="text" id="nom" name="nom" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="nom" class="block text-gray-700">Prénom:</label>
-                    <input type="text" id="prenom" name="prenom" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="nom" class="block text-gray-700">Deuxième prénom:</label>
-                    <input type="text" id="prenom_" name="prenom_" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="dateDebut" class="block text-gray-700">Date de début:</label>
-                    <input type="date" id="dateDebut" name="dateDebut" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="dateFin" class="block text-gray-700">Date de fin:</label>
-                    <input type="date" id="dateFin" name="dateFin" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label for="raison" class="block text-gray-700">Raison:</label>
-                    
-                    <select id="raison" name="raison" id="cars" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <option value="Congés payés">Congés payés</option>
-                        <option value="Congés sans solde">Congés sans solde</option>
-                        <option value="Congés parentaux">Congés parentaux</option>
-                        <option value="Autre" id="Autre">Autre</option>
-                    </select>
-                </div>
-                <div id="raison_div">
-                    <label for="raison" class="block text-gray-700">Autre raison:</label>
-                    <input type="text" id="raison_" name="raison_" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Soumettre</button>
-            </form>
-            <a href="validation.html" class="block mt-4 text-blue-500 hover:underline">Aller à la validation des demandes</a>
-        </div>
-        <!-- Historique à droite -->
-        <div class="w-1/2 p-6">
-            <h2 class="text-xl font-semibold mb-2">Historique des Demandes</h2>
-            <ul id="historique" class="space-y-4"></ul>
-        </div>
+<div class="max-w-4xl w-full bg-white rounded-lg shadow-md flex">
+    <!-- Formulaire à gauche -->
+    <div class="w-1/2 p-6 border-r">
+        <h1 class="text-2xl font-bold mb-4">Déposer une Demande de Congé</h1>
+        <form id="congeForm" class="space-y-4">
+            <div>
+                <label for="nom" class="block text-gray-700">Nom:</label>
+                <input type="text" id="nom" name="nom" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="nom" class="block text-gray-700">Prenom:</label>
+                <input type="text" id="prenom" name="prenom" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="nomusager" class="block text-gray-700">Nom d'usage:</label>
+                <input type="text" id="nomusager" name="nomusager"  class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="dateDebut" class="block text-gray-700">Date de début:</label>
+                <input type="date" id="dateDebut" name="dateDebut" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="dateFin" class="block text-gray-700">Date de fin:</label>
+                <input type="date" id="dateFin" name="dateFin" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label for="raison" class="block text-gray-700">Raison:</label>
+
+                <select id="raison" name="raison" required class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    <option value="Congés payés">Congés payés</option>
+                    <option value="Congés sans solde">Congés sans solde</option>
+                    <option value="Congés parentaux">Congés parentaux</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+            <input type="text" id ="autreRaison" name="autreRaison" placeholder="Autre raison" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 hidden"  style="display: none;">
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Soumettre</button>
+        </form>
+        <a href="validation.html" class="block mt-4 text-blue-500 hover:underline">Aller à la validation des demandes</a>
     </div>
-    <script src="script.js"></script>
+    <!-- Historique à droite -->
+    <div class="w-1/2 p-6">
+        <h2 class="text-xl font-semibold mb-2">Historique des Demandes</h2>
+        <ul id="historique" class="space-y-4"></ul>
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
