@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des Demandes de Congé</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-6">
+    <div class="max-w-4xl w-full bg-white rounded-lg shadow-md">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Historique des Demandes de Congé</h1>
+                <a href="index.html" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Retour au formulaire</a>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <div id="historique" class="bg-white divide-y divide-gray-200">
+                    <!-- Les demandes seront ajoutées ici dynamiquement -->
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <a href="validation.html" class="text-blue-500 hover:underline">Aller à la validation des demandes</a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
