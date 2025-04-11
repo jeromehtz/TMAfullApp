@@ -1,38 +1,139 @@
+// ==================== SYSTÈME D'AUTHENTIFICATION ====================
+const users = [
+    { id: 1, username: "admin", password: "admin123", role: "admin" },
+    { id: 2, username: "employe", password: "employe123", role: "user" }
+];
+
+// Vérifie si l'utilisateur est authentifié
+function checkAuth(requiredRole = null) {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    const currentPage = window.location.pathname.split('/').pop();
+    
+    // Pages accessibles sans connexion
+    const publicPages = ['login.html'];
+    
+    if (!currentUser && !publicPages.includes(currentPage)) {
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    if (currentUser && requiredRole && currentUser.role !== requiredRole) {
+        window.location.href = currentUser.role === 'admin' ? 'validation.html' : 'index.html';
+        return false;
+    }
+    
+    return true;
+}
+
+// Gère la déconnexion
+window.logout = function() {
+    sessionStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+};
+
+// Gère le formulaire de connexion
+function setupLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    if (!loginForm) return;
+
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('errorMessage');
+        
+        const user = users.find(u => u.username === username && u.password === password);
+        
+        if (user) {
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            window.location.href = user.role === 'admin' ? 'validation.html' : 'index.html';
+        } else {
+            errorMessage.textContent = "Identifiant ou mot de passe incorrect";
+            errorMessage.classList.remove('hidden');
+        }
+    });
+}
+
+// Affiche le nom d'utilisateur dans le header
+function displayUserInfo() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (currentUser && document.getElementById('usernameDisplay')) {
+        document.getElementById('usernameDisplay').textContent = currentUser.username;
+    }
+}
+
+// ==================== GESTION DES DEMANDES DE CONGÉ ====================
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialisation de l'authentification
+    displayUserInfo();
+    
+    // Configuration de la page de login
+    if (window.location.pathname.split('/').pop() === 'login.html') {
+        setupLoginForm();
+        return;
+    }
+    
+    // Vérification de l'authentification pour les autres pages
+    if (!checkAuth()) return;
+    
+    // Vérification des rôles pour les pages admin
+    if (window.location.pathname.split('/').pop() === 'validation.html') {
+        if (!checkAuth('admin')) return;
+    }
+
+    // ===== Gestion des formulaires =====
     const form = document.getElementById('congeForm');
     const historique = document.getElementById('historique');
     const demandesValidation = document.getElementById('demandesValidation');
 
+    const raisonSelect = document.getElementById('raison');
+    const autreRaison = document.getElementById('autreRaison');
+    // Affiche le champ "Autre" si la raison sélectionnée est "autre"
+    if (raisonSelect) {
+        raisonSelect.addEventListener('change', function () {
+            if (raisonSelect.value === 'autre') {
+                autreRaison.style.display = 'block';
+            } else {
+                autreRaison.style.display = 'none';
+            }
+        });
+    }
+    // insérer une nouvelle demande
     if (form) {
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
             const nom = document.getElementById('nom').value;
+            const prenom = document.getElementById('prenom').value;
+            const nomusager = document.getElementById('nomusager').value;
             const dateDebut = document.getElementById('dateDebut').value;
             const dateFin = document.getElementById('dateFin').value;
-            const raison = document.getElementById('raison').value;
+            let raison = document.getElementById('raison').value;
+            const autreRaison = document.getElementById('autreRaison');
+            if (autreRaison) {
+                raison = autreRaison.value;
+            }
             const dateDemande = new Date();
             
             
             const demande = {
                 nom,
+                prenom,
+                nomusager,
                 dateDebut,
                 dateFin,
                 raison,
                 statut: 'en attente'
             };
-            if (!nom || !dateDebut || !dateFin || !raison) {
-                alert('Veuillez remplir tous les champs correctement.');
-                return;
-            }
-            else if (new Date(dateDebut) < dateDemande) {
-                alert('La date de début ne peut pas être dans le passé.');
+            if (new Date(dateDebut) < dateDemande) {
+                alert('La date de début doit etre valide.');
                 document.getElementById('dateDebut').value="";
                 return;
             }
             else if (new Date(dateFin) < dateDemande) {
                 document.getElementById('dateFin').value="";
-                alert('La date de fin ne peut pas être dans le passé.');
+                alert('La date de fin doit etre valide.');
                 
                 return;
             }
@@ -61,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Affichage de l'historique des demandes
     function afficherHistorique(demandes) {
         if (historique) {
             historique.innerHTML = '';
@@ -69,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.classList.add('p-4', 'border', 'rounded-lg', 'shadow-sm');
                 li.innerHTML = `
                     <strong>Nom:</strong> ${demande.nom}<br>
+                    <strong>Prénom:</strong> ${demande.prenom}<br>
+                    <strong>Nom d'usage:</strong> ${demande.nomusager}<br>
                     <strong>Date de début:</strong> ${demande.dateDebut}<br>
                     <strong>Date de fin:</strong> ${demande.dateFin}<br>
                     <strong>Raison:</strong> ${demande.raison}<br>
@@ -79,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Affichage des demandes de validation
     function afficherDemandesValidation(demandes) {
         if (demandesValidation) {
             demandesValidation.innerHTML = '';
@@ -88,6 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.innerHTML = `
                     <div class="mb-4">
                         <strong>Nom:</strong> ${demande.nom}<br>
+                        <strong>Prénom:</strong> ${demande.prenom}<br>
+                        <strong>Nom d'usage:</strong> ${demande.nomusager}<br>
                         <strong>Date de début:</strong> ${demande.dateDebut}<br>
                         <strong>Date de fin:</strong> ${demande.dateFin}<br>
                         <strong>Raison:</strong> ${demande.raison}<br>
@@ -102,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+    // Fonction pour obtenir la classe CSS en fonction du statut
 
     function getStatutClass(statut) {
         switch (statut) {
@@ -113,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return 'text-yellow-600';
         }
     }
+    // Fonction pour changer le statut d'une demande
 
     window.changerStatut = function(index, statut) {
         let demandes = JSON.parse(localStorage.getItem('demandes')) || [];
